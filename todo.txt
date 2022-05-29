@@ -1,0 +1,63 @@
+# for fun -> make everywhere typehittings
+
+
+# del dummys in generator
+# optimize??
+# если  он определяет решаемость, нужер ли делать проверку?
+
+arr = np.arange(16).reshape(4, 4) для последовательной матрицы
+
+
+
+# find fucn will random all range on matrix, whitch in subj - bad
+
+You have to manage both randomly determined states (of your own generation of
+course), or input files that specify a starting board, the format of which is described
+in the appendix.
+
+т.е. должен хавать файл если дают иначе рамндом генератор
+
+The Manhattan-distance heuristic is mandatory, the other two are up to you.
+
+
+АУТПУТ
+At the end of the search, the program has to provide the following values:
+◦ Total number of states ever selected in the "opened" set (complexity in time)
+◦ Maximum number of states ever represented in memory at the same time
+during the search (complexity in size)
+◦ Number of moves required to transition from the initial state to the final state,
+according to the search
+◦ The ordered sequence of states that make up the solution, according to the
+search
+◦ The puzzle may be unsolvable, in which case you have to inform the user and
+exit
+
+
+• You need to provide an author file with your logins, each followed by a new line:
+
+
+
+
+LAUNCH FIRM SUBJ
+
+zaz@blackjack:~/npuzzle/$ cat -e npuzzle-3-1.txt
+# this is a comment$
+3$
+3 2 6 #another comment$
+1 4 0$
+8 7 5$
+zaz@blackjack:~/npuzzle/$ cat -e npuzzle-4-1.txt
+# PONIES$
+4$
+0 10 5 7$
+11 14 4 8$
+1 2 6 13$
+12 3 15 9$
+zaz@blackjack:~/npuzzle/$ cat -e npuzzle-4-1.txt
+# Puzzles can be aligned, or NOT. whatever. accept both.$
+4$
+0 10 5 7$
+11 14 4 8$
+1 2 6 13$
+12 3 15 9$
+zaz@blackjack:~/npuzzle/$
