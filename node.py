@@ -1,13 +1,16 @@
 # make d type of arr np.array([[1,2,3], [4,5,6], [7,8,9]], int)   # init int
 # все хранение идет в очередях
 # сделать итератор __ит__ в классе для поиска конецного отца
+# make folder for examples
 from __future__ import annotations
+
 
 import copy
 import random
 import collections
 import numpy as np
 # from scipy.spatial import distance
+import numpy.typing as npt
 import utils
 
 
@@ -79,26 +82,34 @@ class Solver:
 	# openedlist = que
 	# closedlsit = que
 
-
-# hint
-# import typing
-import numpy.typing as npt
-# numpy.ndarray[typing.Any, numpy.dtype[+ScalarType]]
-# def foo(
-#         hello: str='world', bar: str=None,
-#         another_string_or_None: typing.Optional[str]=None):
-# from __future__ import annotations
-
 class Node:
 	# def __init__(self, matrix=None, cost, level, father=None):
 	# def __init__(self, cost, level, matrix: np.array = None, father: Node | int = None):
 	# def __init__(self, cost, level, matrix: np.ndarray[int, Shape[size, size]] = None, father: Node | int = None):
-	def __init__(self, cost, level, matrix: npt.NDArray[np.uint8] = None, father: Node = None):
-		# self.__matrix = matrix
-		# self.__level: int = level
-		# self.__father: Node = father
-		# self.__cost: int | float = cost
-		self.__level: int = 0
+	
+	def __init__(self, father_level, cost, matrix: npt.NDArray[np.uint16] = None, father: Node = None):
+		self.__level: int = level
+		self.__cost: int | float = cost
+		self.__matrix = matrix
+		self.__father: Node = father
+		# porperrt for zero location
+		# лушче стоимость будет считать каждый сам
+		# property на level
+		# property на кост
+		# property на dist # if dist == 0 or 0.0 то это успех
+
+		# добаляем дитя в новый список только если его нет в сете просмотренных
+
+	def make_child_and_send to_open_list():
+		pass
+
+	# getter cost, для добавления в список
+
+	# проверка дитя на соответсвие сразу
+	# и с помощью __eq__
+
+		# at first we should check matrices
+
 
 a = Node(1,2)
 print(a)
