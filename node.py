@@ -2,6 +2,7 @@
 # все хранение идет в очередях
 # сделать итератор __ит__ в классе для поиска конецного отца
 # make folder for examples
+# все свойства сделать приватными
 from __future__ import annotations
 
 
@@ -35,15 +36,15 @@ aim = np.array([[1,2,3], [8,0,4], [7,6,5]], int)
 
 
 directions: dict[str, int] = { # put in funcs (y, x) dict[funcs lol] # think ahere about it
-	'up': lambda coordinate: (coordinate[0] - 1, coordinate[1]),
-	'left': lambda coordinate: (coordinate[0], coordinate[1] - 1),
-	'down': lambda coordinate: (coordinate[0] + 1, coordinate[1]),
-	'right': lambda coordinate: (coordinate[0], coordinate[1] + 1)
-	}
-print(directions['up'].__name__)
-print(directions['up']((1,2)))
-print(type(lambda u : u))
-print(type(1))
+    'up': lambda coordinate: (coordinate[0] - 1, coordinate[1]),
+    'left': lambda coordinate: (coordinate[0], coordinate[1] - 1),
+    'down': lambda coordinate: (coordinate[0] + 1, coordinate[1]),
+    'right': lambda coordinate: (coordinate[0], coordinate[1] + 1)
+    }
+# print(directions['up'].__name__)
+# print(directions['up']((1,2)))
+# print(type(lambda u : u))
+# print(type(1))
 
 new_nodes = set() # deque!
 """
@@ -55,68 +56,92 @@ py: int = int(zero_coord[0])
 px: int = int(zero_coord[1])
 
 for calc_coord in directions.values():
-	temp = np.copy(given)
-	new_py, new_px = calc_coord((py, px))
-	if new_py < 0 or new_px < 0:
-		continue
-	try:
-		temp[py][px], temp[new_py][new_px] = temp[new_py][new_px], temp[py][px]
-	except IndexError:
-		continue
-	# make labda func in other func
-	# переделать на деку
-	new_nodes.add(tuple(map(tuple, temp)))
+    temp = np.copy(given)
+    new_py, new_px = calc_coord((py, px))
+    if new_py < 0 or new_px < 0:
+        continue
+    try:
+        temp[py][px], temp[new_py][new_px] = temp[new_py][new_px], temp[py][px]
+    except IndexError:
+        continue
+    # make labda func in other func
+    # переделать на деку
+    new_nodes.add(tuple(map(tuple, temp)))
 # print(new_nodes)
 
 size: int = 3
 
 
+# def __init__(cls, *args, **kwargs):
+#   cls._var = 5
+#   @property
+#   def var(cls):
+#       return cls._var
+    
+#   @var.setter
+#   def var(cls, value):
+#       cls._var = value
 
-# print()
-# print('manhten dist', utils.manhattan_distance(aim, given))
-# print('euclide dist', utils.euclidean_distance(aim, given))
-# print('euclide dist', utils.chebyshev_distance(aim, given))
-
-class Solver:
-	pass
-	# openedlist = que
-	# closedlsit = que
 
 class Node:
-	# def __init__(self, matrix=None, cost, level, father=None):
-	# def __init__(self, cost, level, matrix: np.array = None, father: Node | int = None):
-	# def __init__(self, cost, level, matrix: np.ndarray[int, Shape[size, size]] = None, father: Node | int = None):
-	
-	def __init__(self, father_level, cost, matrix: npt.NDArray[np.uint16] = None, father: Node = None):
-		self.__level: int = level
-		self.__cost: int | float = cost
-		self.__matrix = matrix
-		self.__father: Node = father
-		# porperrt for zero location
-		# лушче стоимость будет считать каждый сам
-		# property на level
-		# property на кост
-		# property на dist # if dist == 0 or 0.0 то это успех
+    @classmethod
+    @property
+    def aim_hash(cls):
+        return None
 
-		# добаляем дитя в новый список только если его нет в сете просмотренных
+    # def __init__(self, father_level, matrix: npt.NDArray[np.uint16] = None, father: Node = None):
+    def __init__(self, matrix, father, father_level):
+       # father может быть и не налл, тк всего используется 1 раз нулл
+       self.level: int = 0 if father_level is None else father_level + 1
+       self.matrix = matrix
+       self.father = father
 
-	def make_child_and_send to_open_list():
-		pass
-
-	# getter cost, для добавления в список
-
-	# проверка дитя на соответсвие сразу
-	# и с помощью __eq__
-
-		# at first we should check matrices
+       self.matrix_hash = Node.make_matrix_hash(matrix)
 
 
-a = Node(1,2)
-print(a)
+
+
+
+        # porperrt for zero tile
+        # лушче стоимость будет считать каждый сам
+        # property на level
+        # property на кост
+        # property на dist # if dist == 0 or 0.0 то это успех
+
+        # добаляем дитя в новый список только если его нет в сете просмотренных
+
+    def make_child_and_send_to_open_list():
+        pass
+
+    @staticmethod
+    def make_matrix_hash(matrix):
+        return hash(tuple(map(tuple, matrix)))
+
+
+    def __hash__(self):
+        # hash # tuple(map(tuple, self.aim_puzzle))
+        pass
+
+    # def __eq__
+    # print(tuple(map(tuple, self.aim_puzzle)))
+    # cls.aim_hash
+    # compare with hash aim
+
+
+    # getter cost, для добавления в список
+
+    # проверка дитя на соответсвие сразу
+    # и с помощью __eq__
+
+        # at first we should check matrices
+
+
+# a = Node(1,2)
+# print(a)
 # class Node:
 #     def __init__(self, father=None):
 #         self.father = father
 #         self.f = father.level # g
 #         self.h = 0
 
-x : npt.NDArray[np.float64] = np.array([1, 2, 3])
+# x : npt.NDArray[np.float64] = np.array([1, 2, 3])

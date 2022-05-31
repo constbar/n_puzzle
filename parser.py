@@ -1,61 +1,91 @@
+import utils
+from node import Node
+import sys
+
 # add arg parse
 # change comment in sys.exits
 # maybe name shoud be n-puzzle.py
 # funcion parsing send to utils
 # elsi nepravilnij puzlle prishel -> input ues/no for generating own puzzle
 # checker na validnost' puzzle solving
+# rename file
+# from solver import Solver
+# можно сделть синглтоном
+# need i puzzle size?
+# size nd open and closed deques # 
+# need size puzzle form parser
+# closed list can be set и проверка может быть с помощью хеша
+# можно сделать aim list или дикт и обращаться к функциям формирования по индексам
+# make que in open list
+# deq = deq c 1 start element
+# проверить функцию дек на 
+# def propery solved??
 
-import sys
-import numpy as np
-from solver import Solver
+# for i in range(0, self.puzzle_size**2, self.puzzle_size):
+# print(self.puzzle[i: i + self.puzzle_size])
+
+# while queue: in solving loop
+# queue = collections.deque(sorted(list(queue), key=lambda node: node.f))
+# кстати может быть генератором
+
+# идем while -> добавляем детей -> проверка каждого на достижение цели -> если есть цель, 
+# запускаем поиск отца
+
+
+
+class Solver:
+    def __init__(self, puzzle, puzzle_size):
+        
+        self.aim_puzzle = utils.create_aim_puzzle(puzzle_size)
+
+        self.puzzle = puzzle
+        self.puzzle_size = puzzle_size
+
+        self.root_node = self.make_root_node()
+
+        self.open_list = list()
+        self.closed_list = set()
+
+        # print(self.root_node)
+        # print(self.root_node.level)
+        # print(self.root_node.father)
+        # print(self.root_node.matrix)
+
+
+    def make_root_node(self):
+        root = Node(self.puzzle, father=None, father_level=None)
+        root.level = 0 # make setter
+        print(Node.aim_hash)
+        Node.aim_hash = Node.make_matrix_hash(self.aim_puzzle)
+        print(Node.aim_hash)
+        # exit()
+        print(root.matrix_hash)
+        # проверяем?
+
+        # добавляем в que
+        # дулаем детей
+        # добавляем в сет тогда 
+        return root
+
+    def __str__(self):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__== '__main__':
     # sys.argv[1] = path
     path = 'tests/my_case.txt'
-
-    puzzle_size = 0
-    try:
-        with open(path, 'r') as f: # path
-            data = f.read().split('\n')
-    except FileNotFoundError:
-        sys.exit('need valid file')
-
-    for i in data:
-        if i.startswith('#'):
-            data.remove(i)
-        elif '#' in i:
-            data[data.index(i)] = i[:i.find('#') - 1]
-    if not data[0].strip().isdigit():
-        sys.exit('er parsing')
-
-    puzzle_size = int(data[0])
-    print('puz size', puzzle_size)
-    del data[0]
-    print(len(data))
-    print(data)
-    if puzzle_size != len(data):
-        sys.exit('wrong declared size vs real size') # need to check it
-    exit()
-    data = sum([i.split() for i in data], [])
-
-    try:
-        data = list(map(int, data))
-    except ValueError:
-        sys.exit('ints should be in data')
-    print(data)
-    exit()
-    
-    if set(data) != set(range(puzzle_size ** 2)):
-        sys.exit('wrong given args')
-
-    import numpy as np
-    arr = np.array(data).reshape(puzzle_size, puzzle_size)
-    print(arr)
-    print(data)
-
-    # print('data: ', data)
-    # print('file: ', f)
-
-    # kek = Puzzle(data, puzzle_size)
-    # print(kek)
+    data = utils.parse_file(path)
+    solver = Solver(data['puzzle'], data['puzzle_size'])
 
