@@ -55,11 +55,10 @@ class Solver:
     def make_root_node(self):
         root = Node(self.puzzle, father=None, father_level=None)
         root.level = 0 # make setter
-        print(Node.aim_hash)
         Node.aim_hash = Node.make_matrix_hash(self.aim_puzzle)
         print(Node.aim_hash)
-        # exit()
-        print(root.matrix_hash)
+        root.__eq__(22)
+
         # проверяем?
 
         # добавляем в que
@@ -69,17 +68,6 @@ class Solver:
 
     def __str__(self):
         pass
-
-
-
-
-
-
-
-
-
-
-
 
 
 

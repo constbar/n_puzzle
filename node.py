@@ -84,10 +84,15 @@ size: int = 3
 
 
 class Node:
-    @classmethod
+    __aim_hash = None
+
     @property
-    def aim_hash(cls):
-        return None
+    def aim_hash(self):
+        return self.__aim_hash
+
+    @aim_hash.setter
+    def aim_hash(self, val):
+        self.__aim_hash = val
 
     # def __init__(self, father_level, matrix: npt.NDArray[np.uint16] = None, father: Node = None):
     def __init__(self, matrix, father, father_level):
@@ -98,8 +103,18 @@ class Node:
 
        self.matrix_hash = Node.make_matrix_hash(matrix)
 
+    def __eq__(self, other):
+        print(NotImplemented)
+        return NotImplemented
+        # return self.matrix_hash == self.aim_hash
 
-
+        # def __eq__(self, other: object) -> bool:
+        #     if not isinstance(other, Person):
+        #         # If we return NotImplemented, Python will automatically try
+        #         # running other.__eq__(self), in case 'other' knows what to do with
+        #         # Person objects.
+        #         return NotImplemented
+        #     return self.id == other.id
 
 
         # porperrt for zero tile
