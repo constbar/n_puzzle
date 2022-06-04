@@ -9,9 +9,7 @@ def create_random_puzzle(puzzle_size):
 
 import collections
 def create_aim_puzzle(puzzle_size):
-	"""
-	for snake/ulitka location
-	"""
+	"""	for snake/ulitka location"""
 	deq = collections.deque(range(1, puzzle_size**2))
 	res = np.zeros((puzzle_size, puzzle_size), dtype=int)
 
@@ -44,24 +42,7 @@ def create_aim_puzzle(puzzle_size):
 
 
 import numpy as np
-from scipy.spatial import distance # type: ignore
 
-
-
-def manhattan_distance(matrix1: np.ndarray, matrix2: np.ndarray): # -> int
-	l = len(matrix1) # remake in size
-	return sum([distance.cityblock(np.where(matrix1 == i),
-		np.where(matrix2 == i)) for i in range(1, l**2)])
-
-def euclidean_distance(matrix1, matrix2): # float
-	l = len(matrix1)
-	return sum([distance.euclidean(np.where(matrix1 == i),
-		np.where(matrix2 == i)) for i in range(1, l**2)])
-
-def chebyshev_distance(matrix1, matrix2): # int or float
-	l = len(matrix1)
-	return sum([distance.chebyshev(np.where(matrix1 == i),
-		np.where(matrix2 == i)) for i in range(1, l**2)])
 
 
 import sys
@@ -101,4 +82,4 @@ def parse_file(path): # or other name
 
     # rename arr
     arr = np.array(data).reshape(puzzle_size, puzzle_size)
-    return {'puzzle': arr, 'puzzle_size': puzzle_size}
+    return arr # rename na puzzle i think
