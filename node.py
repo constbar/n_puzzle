@@ -8,8 +8,6 @@ from __future__ import annotations
 # везде почистить сеттеры и геттеры где они не нужны
 # directions: dict[str, int] = { # put in funcs (y, x) dict[funcs lol] # think ahere about it
 # def __init__(self, father_level, matrix: npt.NDArray[np.uint16] = None, father: Node = None):
-from parser import Solver
-
 import copy
 import random
 import collections

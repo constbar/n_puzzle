@@ -1,6 +1,8 @@
+import sys
 import utils
 from node import Node
-import sys
+from scipy.spatial import distance
+
 
 # add arg parse
 # change comment in sys.exits
@@ -31,12 +33,10 @@ import sys
 # идем while -> добавляем детей -> проверка каждого на достижение цели -> если есть цель, 
 # запускаем поиск отца
 
-from scipy.spatial import distance
-
-
-
 class Solver:
     def __init__(self, puzzle):
+        # check later if it really all vals needs me
+        # yes, i will add __vars everywhere
         self.puzzle = puzzle
         self.p_size = len(puzzle)
         self.aim_puzzle = utils.create_aim_puzzle(self.p_size)
@@ -45,12 +45,11 @@ class Solver:
         self.closed_list = set()
 
         self.method = [distance.cityblock,
-                            distance.euclidean,
-                            distance.chebyshev][0]
+                       distance.euclidean,
+                       distance.chebyshev][1]
 
         self.init_node_cls_variables()
         self.root_node = self.init_root_node()
-
 
     def init_node_cls_variables(self):
         Node.matrix_size = self.p_size
@@ -58,23 +57,23 @@ class Solver:
         Node.aim_matrix = self.aim_puzzle
         Node.aim_hash = Node.make_matrix_hash(self.aim_puzzle)
 
-    def init_root_node(self):
+    def init_root_node(self): # rename to like start
         root = Node(self.puzzle, father=None)
-        print(root.level)
-        print(root.__hash__())
-        print(root.aim_hash)
-        print(root.full_cost)
+        # print(root.level)
+        # print(root.__hash__())
+        # print(root.aim_hash)
+        # print(root.full_cost)
+        ch = root.make_children()
+        print(ch[2].matrix)
+        print('lev', ch[0].level)
+        print('cost', ch[0].full_cost)
+
+        print()
+        ch2 = ch[2].make_children()[0]
+        print(ch2.full_cost)
         exit()
 
-
-        # root.level = 0  # make setter
-
         """
-        # print(root.matrix)
-        # print()
-        # print(root.aim_matrix)
-        # print(root.counted_h)
-        root.make_child_and_send_to_open_list()
         exit()
         # print(root.__aim_matrix)
         # make = calculation
