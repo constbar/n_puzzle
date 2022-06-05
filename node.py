@@ -37,6 +37,9 @@ class Node:
     def __hash__(self):
         return Node.make_matrix_hash(self.matrix)
 
+    def __lt__(self, other):
+        return self.full_cost < other.full_cost
+
     def check_node_aim(self):
         return self.__hash__() == Node.aim_hash
 
@@ -50,7 +53,8 @@ class Node:
     @property
     def h_cost(self):
         return sum([Node.calc_method(np.where(self.matrix == i),
-                                     np.where(Node.aim_matrix == i)) for i in range(1, Node.matrix_size ** 2)])
+                                     np.where(Node.aim_matrix == i))
+                    for i in range(1, Node.matrix_size ** 2)])
 
     @property
     def full_cost(self):
@@ -60,16 +64,34 @@ class Node:
         children_node_list = []
         py, px = self.zero_tile
         for calc_coord in self.directions.values():
-            temp = np.copy(self.matrix) # rename new matrix
+            new_matrix = np.copy(self.matrix)
             new_py, new_px = calc_coord((py, px))
             if new_py < 0 or new_px < 0:
                 continue
             try:
-                temp[py][px], temp[new_py][new_px] = temp[new_py][new_px], temp[py][px]
+                new_matrix[py][px], new_matrix[new_py][new_px] = \
+                    new_matrix[new_py][new_px], new_matrix[py][px]
             except IndexError:
                 continue
-            children_node_list.append(Node(temp, self))
+            children_node_list.append(Node(new_matrix, self))
         return children_node_list
+
+    def get_solution_path(self):
+        solution_path = list()
+        solution_path.append(self.matrix)
+        # solution_path.append(self.matrix.tolist())
+        while self.father is not None:
+            # solution_path.append(self.father.matrix.tolist())
+            solution_path.append(self.father.matrix)
+            self.father = self.father.father
+        return solution_path
+
+        # temp = self.head
+        # while (temp.next != None):
+        #     temp = temp.next
+        # temp.next = newNode
+
+
 
     @staticmethod
     def make_matrix_hash(matrix):
