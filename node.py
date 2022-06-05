@@ -79,19 +79,10 @@ class Node:
     def get_solution_path(self):
         solution_path = list()
         solution_path.append(self.matrix)
-        # solution_path.append(self.matrix.tolist())
         while self.father is not None:
-            # solution_path.append(self.father.matrix.tolist())
             solution_path.append(self.father.matrix)
             self.father = self.father.father
         return solution_path
-
-        # temp = self.head
-        # while (temp.next != None):
-        #     temp = temp.next
-        # temp.next = newNode
-
-
 
     @staticmethod
     def make_matrix_hash(matrix):
