@@ -82,7 +82,7 @@ class Node:
         while self.father is not None:
             solution_path.append(self.father.matrix)
             self.father = self.father.father
-        return solution_path
+        return solution_path[::-1]
 
     @staticmethod
     def make_matrix_hash(matrix):

@@ -1,9 +1,11 @@
+import re
 import sys
 import utils
 from node import Node
 from queue import PriorityQueue
 from scipy.spatial import distance
 from termcolor import colored
+import time
 
 # add arg parse
 # change comment in sys.exits
@@ -52,40 +54,11 @@ class Solver:
                        distance.euclidean,
                        distance.chebyshev][0]  # try other
 
-        # self.init_node_cls_variables()
-        # self.solution = self.solve_puzzle()
-        # self.print_solution_path()
-        kek = self.puzzle.__str__()
-        lol = self.aim_puzzle.__str__()
-        print(len(kek))
-        print(len(lol))
-        print()
-        for i in range(len(kek)):
-            if kek[i] == lol[i]:
-                print(colored(kek[i], 'green'), end='')
-            elif kek[i] == '0':
-                print(kek[i], end='')
-            else:
-                print(colored(kek[i], 'red'), end='')
-        # print(kek)
-        # print(type(kek))
-        # print(len(kek))
-        # print(self.puzzle.__str__())
-        # for i in self.puzzle:
-        #     print(i)
+        self.init_node_cls_variables()
+        self.solution = self.solve_puzzle()
+        self.solution_path = self.solution.get_solution_path()
+        self.print_solution_path()
 
-        exit()
-        res = ''
-        for i in range(len(self.puzzle)):
-            for k in range(len(str(self.puzzle[i]))):
-                if str(self.puzzle[i])[k] == '\n':
-                    res += '\n'
-                elif str(self.puzzle[i])[k] == str(self.aim_puzzle[i])[k]:
-                    res += colored(str(self.puzzle[i])[k], 'green')
-                else:
-                    res += str(self.puzzle[i])[k]
-            res += '\n'
-        print(res)
 
 
     def init_node_cls_variables(self):
@@ -104,7 +77,7 @@ class Solver:
         self.open_list.put(root_node)
         while not self.open_list.empty():
             lowest_cost_node = self.open_list.get()
-            print('FULLcost lowest', lowest_cost_node.full_cost, '  and size', self.open_list.qsize())
+            # print('FULLcost lowest', lowest_cost_node.full_cost, '  and size', self.open_list.qsize())
             children = lowest_cost_node.make_children()
             self.closed_list.add(lowest_cost_node.__hash__())
             for child in children:
@@ -119,25 +92,25 @@ class Solver:
         return solution_node
 
     def print_solution_path(self):
-        AAA = str(self.aim_puzzle)
-        # print('aaa\n',AAA)
-        # (A == B).all()
-        # print(self.solution)
-        # print(self.solution.matrix)
-        # print()
-        # print(self.solution.get_solution_path())
-        # print(len(self.solution.get_solution_path()))
-        for i in self.solution.get_solution_path()[::-1]:
-            for k in i.tolist():
-                print(colored(k, 'cyan'))
-            print()
-        # print(len(self.solution.get_solution_path()))
-        # self.solution = solution_node.get_solution_path()
-        # # print(solution)
-        # for i in self.solution[::-1]:
-        #     # for k in
-        #     print(i)
-        #     print()
+        aim = self.aim_puzzle.tolist()
+        len_path = len(self.solution_path)
+        for matrix in self.solution_path:
+            print_matrix = matrix.copy()
+            matrix = matrix.tolist()
+            for y in range(self.p_size):
+                for x in range(self.p_size):
+                    if matrix[y][x] == 0 and len_path > 1:
+                        continue
+                    elif matrix[y][x] == aim[y][x]:
+                        matrix[y][x] = colored(matrix[y][x], 'green')
+                    else:
+                        matrix[y][x] = colored(matrix[y][x], 'red')
+            print_matrix = re.sub(r'\d+', '{}', print_matrix.__str__()).\
+                replace('[[', ' [').replace('[', '').replace(']', '')
+            print(print_matrix.format(*tuple(sum(matrix, []))))
+            if len_path > 1:
+                print()
+            len_path -= 1
 
 
 if __name__ == '__main__':
