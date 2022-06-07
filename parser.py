@@ -99,9 +99,8 @@ class Solver:
         green = lambda i: colored(str(i), 'green')
         self.print_solution_path()
         # make variants here
-        # print('algorithm:', colored('a star search', 'yellow'))
         print('applied algorithm:', green('a star search'))  # optional
-        print('applied heuristic function:', green('manhatan')) # optional
+        print('applied heuristic function:', green('manhatan'))  # optional
         print()
         print('number of moves:', green(self.__moves_number))
         print('search time:', green(round(self.__search_time, 3)), 'secs')
