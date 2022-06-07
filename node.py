@@ -4,10 +4,7 @@
 # make folder for examples
 # все свойства сделать приватными
 from __future__ import annotations
-# если нам не нужен геттер при сеттере, то можно его убрать???
-# везде почистить сеттеры и геттеры где они не нужны
-# directions: dict[str, int] = { # put in funcs (y, x) dict[funcs lol] # think ahere about it
-# def __init__(self, father_level, matrix: npt.NDArray[np.uint16] = None, father: Node = None):
+
 import copy
 import random
 import collections

@@ -1,55 +1,44 @@
-
-def create_random_puzzle(puzzle_size):
-	rand = list(range(size**2))
-	random.shuffle(rand)
-	rand = np.array(rand).reshape(size, size)
-	return rand
-# kek = create_random_puzzle(size)
-# print(kek)
-
 import collections
-def create_aim_puzzle(puzzle_size):
-	"""	for snake/ulitka location"""
-	deq = collections.deque(range(1, puzzle_size**2))
-	res = np.zeros((puzzle_size, puzzle_size), dtype=int)
-
-	turn_flag = 0
-	y, x = 0, 0
-	circle = 1
-
-	while deq:
-		try:
-			if res[y][x] == 0:
-				res[y][x] = deq.popleft()
-		except IndexError:
-			if circle % 4 == 0:
-				y += 1
-			res = np.rot90(res)
-			circle += 1
-			x = 0
-		x += 1
-
-	while res[0][0] != 1:
-		res = np.rot90(res)
-	return res
-
-
-
-
-
-
-
-
-
-import numpy as np
-
-
 
 import sys
 import numpy as np
 
+def create_random_puzzle(puzzle_size):
+    rand = list(range(size**2))
+    random.shuffle(rand)
+    rand = np.array(rand).reshape(size, size)
+    return rand
+# kek = create_random_puzzle(size)
+# print(kek)
+
+def create_aim_puzzle(puzzle_size):
+    """	for snake/ulitka location"""
+    deq = collections.deque(range(1, puzzle_size**2))
+    res = np.zeros((puzzle_size, puzzle_size), dtype=int)
+
+    turn_flag = 0
+    y, x = 0, 0
+    circle = 1
+
+    while deq:
+        try:
+            if res[y][x] == 0:
+                res[y][x] = deq.popleft()
+        except IndexError:
+            if circle % 4 == 0:
+                y += 1
+            res = np.rot90(res)
+            circle += 1
+            x = 0
+        x += 1
+
+    while res[0][0] != 1:
+        res = np.rot90(res)
+    return res
+
+
 def parse_file(path): # or other name
-	# params for choosing algo and count dist
+    # params for choosing algo and count dist
     try:
         with open(path, 'r') as f: # path
             data = f.read().split('\n')

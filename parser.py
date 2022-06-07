@@ -5,39 +5,8 @@ from node import Node
 from queue import PriorityQueue
 from scipy.spatial import distance
 from termcolor import colored
-import time
+import timeit
 
-# add arg parse
-# change comment in sys.exits
-# maybe name shoud be n-puzzle.py
-# funcion parsing send to utils
-# elsi nepravilnij puzlle prishel -> input ues/no for generating own puzzle
-# checker na validnost' puzzle solving
-# rename file
-# from solver import Solver
-# можно сделть синглтоном
-# need i puzzle size?
-# size nd open and closed deques # 
-# need size puzzle form parser
-# closed list can be set и проверка может быть с помощью хеша
-# можно сделать aim list или дикт и обращаться к функциям формирования по индексам
-# make que in open list
-# deq = deq c 1 start element
-# проверить функцию дек на 
-# def propery solved??
-
-# for i in range(0, self.puzzle_size**2, self.puzzle_size):
-# print(self.puzzle[i: i + self.puzzle_size])
-
-# while queue: in solving loop
-# queue = collections.deque(sorted(list(queue), key=lambda node: node.f))
-# кстати может быть генератором
-
-# идем while -> добавляем детей -> проверка каждого на достижение цели -> если есть цель, 
-# запускаем поиск отца
-
-import colorama
-import numpy as np
 
 class Solver:
     def __init__(self, puzzle):
@@ -54,32 +23,45 @@ class Solver:
                        distance.euclidean,
                        distance.chebyshev][0]  # try other
 
+        self.__search_time = 0
+        self.__moves_number = 0
+        self.__selected_states = 0
+        self.__size_complexity = 0
+
+        # make function for run solving
         self.init_node_cls_variables()
         self.solution = self.solve_puzzle()
-        self.solution_path = self.solution.get_solution_path()
-        self.print_solution_path()
+        if self.solution:  # need i this check?
+            self.solution_path = self.solution.get_solution_path()
 
-
+        self.__moves_number = len(self.solution_path)
+        self.print_result()
 
     def init_node_cls_variables(self):
         Node.matrix_size = self.p_size
-        Node.calc_method = self.method
+        Node.calc_method = self.method  # euclidean
         Node.aim_matrix = self.aim_puzzle
         Node.aim_hash = Node.make_matrix_hash(self.aim_puzzle)
 
     def solve_puzzle(self):
+        i = 0
+        start_time = timeit.default_timer()
         solution_node = None
         root_node = Node(self.puzzle, father=None)
         if root_node.check_node_aim() is True:
             solution_node = root_node
-            return solution_node
+            self.__search_time = timeit.default_timer() - start_time
+            return solution_node  # print puzzle solution is already given
 
         self.open_list.put(root_node)
         while not self.open_list.empty():
             lowest_cost_node = self.open_list.get()
+            self.__selected_states += 1
             # print('FULLcost lowest', lowest_cost_node.full_cost, '  and size', self.open_list.qsize())
             children = lowest_cost_node.make_children()
             self.closed_list.add(lowest_cost_node.__hash__())
+            if self.__size_complexity < self.open_list.qsize() + len(self.closed_list) + len(children):
+                self.__size_complexity = self.open_list.qsize() + len(self.closed_list) + len(children)
             for child in children:
                 if child.check_node_aim():
                     solution_node = child
@@ -89,11 +71,12 @@ class Solver:
             else:
                 continue
             break
+        self.__search_time = timeit.default_timer() - start_time
         return solution_node
 
     def print_solution_path(self):
         aim = self.aim_puzzle.tolist()
-        len_path = len(self.solution_path)
+        len_path = self.__moves_number
         for matrix in self.solution_path:
             print_matrix = matrix.copy()
             matrix = matrix.tolist()
@@ -108,9 +91,25 @@ class Solver:
             print_matrix = re.sub(r'\d+', '{}', print_matrix.__str__()).\
                 replace('[[', ' [').replace('[', '').replace(']', '')
             print(print_matrix.format(*tuple(sum(matrix, []))))
-            if len_path > 1:
-                print()
+            # if len_path > 1: # unncesasary
+            print()
             len_path -= 1
+
+    def print_result(self):
+        green = lambda i: colored(str(i), 'green')
+        self.print_solution_path()
+        # make variants here
+        # print('algorithm:', colored('a star search', 'yellow'))
+        print('applied algorithm:', green('a star search'))  # optional
+        print('applied heuristic function:', green('manhatan')) # optional
+        print()
+        print('number of moves:', green(self.__moves_number))
+        print('search time:', green(round(self.__search_time, 3)), 'secs')
+        print('number states in memory:', green(self.__size_complexity))
+        print('number of selected states:', green(self.__selected_states))
+
+
+
 
 
 if __name__ == '__main__':
