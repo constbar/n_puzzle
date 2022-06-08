@@ -11,12 +11,11 @@ def create_random_puzzle(puzzle_size):
 # kek = create_random_puzzle(size)
 # print(kek)
 
-def create_aim_puzzle(puzzle_size):
+def create_goal_puzzle(puzzle_size):
     """	for snake/ulitka location"""
     deq = collections.deque(range(1, puzzle_size**2))
     res = np.zeros((puzzle_size, puzzle_size), dtype=int)
 
-    turn_flag = 0
     y, x = 0, 0
     circle = 1
 
@@ -71,4 +70,29 @@ def parse_file(path): # or other name
 
     # rename arr
     arr = np.array(data).reshape(puzzle_size, puzzle_size)
-    return arr # rename na puzzle i think
+    return arr, puzzle_size # rename na puzzle i think
+
+
+def gen_inversion_number(array):
+    inversions = 0
+    for i in range(len(array)):
+        n = array[i]
+        if n <= 1:
+            continue
+        j = i + 1
+        while j < len(array):
+            if 0 < array[j] < n:
+                inversions += 1
+            j += 1
+    return inversions
+
+
+def is_solvable(start, goal, width):
+    start_inv = gen_inversion_number(sum(start.tolist(), []))
+    goal_inv = gen_inversion_number(sum(goal.tolist(), []))
+    if width % 2 == 0:
+        start_zero_ind = int(np.where(start == 0)[0])
+        goal_zero_ind = int(np.where(goal == 0)[0])
+        return goal_inv % 2 == (start_inv + goal_zero_ind + start_zero_ind) % 2
+    else:
+        return start_inv % 2 == goal_inv % 2

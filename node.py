@@ -1,8 +1,3 @@
-# make d type of arr np.array([[1,2,3], [4,5,6], [7,8,9]], int)   # init int
-# все хранение идет в очередях
-# сделать итератор __ит__ в классе для поиска конецного отца
-# make folder for examples
-# все свойства сделать приватными
 from __future__ import annotations
 
 import copy
@@ -16,7 +11,8 @@ from scipy.spatial import distance  # type: ignore
 class Node:
     matrix_size = None
     calc_method = None
-    aim_matrix = None
+    goal_matrix = None
+    algorithm = None
     aim_hash = None
 
     directions = {  # put in funcs (y, x) dict[funcs lol] # think here about it
@@ -27,15 +23,23 @@ class Node:
     }
 
     def __init__(self, matrix, father):
+        """make documentation here
+        level means G(x)
+        """
         self.matrix = matrix
         self.father = father
-        self.level = 0 if father is None else father.level + 1  # means G(x)
+        self.level = 0 if father is None else father.level + 1
 
     def __hash__(self):
         return Node.make_matrix_hash(self.matrix)
 
     def __lt__(self, other):
-        return self.full_cost < other.full_cost
+        if Node.algorithm == 'a-star_search':
+            return self.full_cost < other.full_cost
+        elif Node.algorithm == 'greedy_search':
+            return self.h_cost < other.h_cost
+        else:
+            return self.level < other.level
 
     def check_node_aim(self):
         return self.__hash__() == Node.aim_hash
@@ -50,7 +54,7 @@ class Node:
     @property
     def h_cost(self):
         return sum([Node.calc_method(np.where(self.matrix == i),
-                                     np.where(Node.aim_matrix == i))
+                                     np.where(Node.goal_matrix == i))
                     for i in range(1, Node.matrix_size ** 2)])
 
     @property

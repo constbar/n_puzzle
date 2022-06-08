@@ -1,6 +1,5 @@
 to do
 
-* classic solution / snail solution
 * author file
 
 * uniform cost
@@ -41,3 +40,5 @@ emtpy lines doents parses, need to skip it
 3 1 0 #another comment
 6 8 7
 2 5 4
+
+make d type of arr np.array([[1,2,3], [4,5,6], [7,8,9]], int)   init int
