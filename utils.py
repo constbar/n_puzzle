@@ -87,12 +87,12 @@ def gen_inversion_number(array):
     return inversions
 
 
-def is_solvable(start, goal, width):
-    start_inv = gen_inversion_number(sum(start.tolist(), []))
-    goal_inv = gen_inversion_number(sum(goal.tolist(), []))
+def is_solvable(init_state, goal_state, width):
+    init_inv = gen_inversion_number(sum(init_state.tolist(), []))
+    goal_inv = gen_inversion_number(sum(goal_state.tolist(), []))
     if width % 2 == 0:
-        start_zero_ind = int(np.where(start == 0)[0])
-        goal_zero_ind = int(np.where(goal == 0)[0])
-        return goal_inv % 2 == (start_inv + goal_zero_ind + start_zero_ind) % 2
+        start_zero_ind = int(np.where(init_state == 0)[0])
+        goal_zero_ind = int(np.where(goal_state == 0)[0])
+        return goal_inv % 2 == (init_inv + goal_zero_ind + start_zero_ind) % 2
     else:
-        return start_inv % 2 == goal_inv % 2
+        return init_inv % 2 == goal_inv % 2
