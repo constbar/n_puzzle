@@ -1,24 +1,21 @@
 from __future__ import annotations
 
-import copy
-import random
-import collections
 import numpy as np
-import numpy.typing as npt
-import utils
-from scipy.spatial import distance
 
 
 # repalce funcions order
+from typing import Callable
 
 
 class Node:
     __slots__ = ('state', '__father', '__level')
-    puzzle_size = None
-    calc_method = None
-    goal_state = None
-    algorithm = None
-    aim_hash = None
+    puzzle_size: int | None = None  # make here types
+    # calc_method:  None = None
+    calc_method: Callable[[tuple, tuple], int | float] | None = None  # can make more deteil
+    goal_state: np.ndarray | None = None
+    algorithm: str | None = None
+    aim_hash: int | None = None
+    goal_coordinates = None  # check all cars for using
 
     directions = {  # put in funcs (y, x) dict[funcs lol] # think here about it
         'up': lambda coordinate: (coordinate[0] - 1, coordinate[1]),
@@ -34,6 +31,8 @@ class Node:
         self.state = state  # rename back __
         self.__father = father
         self.__level = 0 if father is None else father.__level + 1
+        print(type(Node.aim_hash))
+        exit()
 
     def __hash__(self):
         return Node.make_state_hash(self.state)
@@ -49,41 +48,34 @@ class Node:
     def check_node_aim(self):
         return self.__hash__() == Node.aim_hash
 
-    @property
-    def zero_tile(self):
+    def __get_zero_tile(self):
         zero_coord = np.where(self.state == 0)
-        py: int = int(zero_coord[0])
-        px: int = int(zero_coord[1])
+        py = int(zero_coord[0])
+        px = int(zero_coord[1])
         return py, px
 
-    @property
-    def h_cost(self):
-        total: float = 0  # make int
-        from math import sqrt
-        # create function to calculate Manhattan distance
-        # def manhattan(a, b):
-        #     return [abs(val1 - val2) for val1, val2 in zip(a, b)]
-        #     # return sum(abs(val1 - val2) for val1, val2 in zip(a, b))
-        #
+    @property # no need for h cost
+    def h_cost(self):  # int or float
+        heuristic_result = 0
         for i in range(1, Node.puzzle_size ** 2):
-            temp = list(zip(np.where(self.state == i), np.where(Node.goal_state == i)))
-            diff = lambda y: float(np.abs(y[0] - y[1]))  # if manh or chevushev to INT
-            yyy = diff(temp[0])  # srazu plusovat' k total
-            xxx = diff(temp[1])
-            total += xxx + yyy
-        # print('MY H COST', total)
-        return total  # rename manh dist
-        # return sum([Node.calc_method(np.where(self.state == i),
-        #                              np.where(Node.goal_state == i))
-        #             for i in range(1, Node.puzzle_size ** 2)])
+            state_coordinates = np.where(self.state == i)
+
+            print(type(state_coordinates))
+            print(type(Node.goal_coordinates[i]))
+            print(state_coordinates)
+            print(Node.goal_coordinates[i])
+            # exit()
+            heuristic_result += Node.calc_method(
+                tuple(state_coordinates), Node.goal_coordinates[i])  # why tuple
+        return heuristic_result
 
     @property
-    def full_cost(self):
+    def full_cost(self): #  it calls anopther by letter
         return self.__level + self.h_cost
 
     def make_children(self):
         children_node_list = []
-        py, px = self.zero_tile
+        py, px = self.__get_zero_tile()
         for calc_coord in self.directions.values():
             new_state = np.copy(self.state)
             new_py, new_px = calc_coord((py, px))
@@ -108,5 +100,23 @@ class Node:
     @staticmethod
     def make_state_hash(state):
         return hash(tuple(map(tuple, state)))
+
+    @staticmethod
+    def calc_manhattan_distance(state_coord, goal_coord):
+        # print(type(state_coord))
+        # print(type(goal_coord))
+        # exit()
+        return int(np.abs(goal_coord[0] - state_coord[0]) +
+                   np.abs(goal_coord[1] - state_coord[1]))
+
+    @staticmethod
+    def calc_euclidean_distance(state_coord, goal_coord) -> float:
+        return float((goal_coord[0] - state_coord[0]) ** 2 +
+                     (goal_coord[1] - state_coord[1]) ** 2) ** .5
+
+    @staticmethod
+    def calc_chebyshev_distance(state_coord, goal_coord) -> int:
+        return int(max(np.abs(goal_coord[0] - state_coord[0]),
+                       np.abs(goal_coord[1] - state_coord[1])))
 
 # def

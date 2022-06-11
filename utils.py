@@ -11,7 +11,7 @@ def create_random_puzzle(puzzle_size):
 # kek = create_random_puzzle(size)
 # print(kek)
 
-def create_goal_puzzle(puzzle_size):
+def create_goal_puzzle(puzzle_size): # state reanme
     """	for snake/ulitka location"""
     deq = collections.deque(range(1, puzzle_size**2))
     res = np.zeros((puzzle_size, puzzle_size), dtype=int)
@@ -34,6 +34,9 @@ def create_goal_puzzle(puzzle_size):
     while res[0][0] != 1:
         res = np.rot90(res)
     return res
+
+
+
 
 
 def parse_file(path): # or other name

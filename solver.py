@@ -1,16 +1,11 @@
 import re
-import sys
-import utils
-from node import Node
-from queue import PriorityQueue
-from scipy.spatial import distance
-from termcolor import colored
 import timeit
-import numpy as np
+from queue import PriorityQueue
 
-# __doc__ describes features
-# print result can be caled outsisde class
-# and print solution path
+import numpy as np
+from termcolor import colored
+
+from node import Node
 
 
 class Solver:
@@ -21,7 +16,8 @@ class Solver:
         '__selected_states', '__size_complexity', '__solution',
         '__solution_path')
 
-    def __init__(self, init_state, goal_state, puzzle_size, algorithm=0, heuristic=0):
+    def __init__(self, init_state: np.ndarray, goal_state: np.ndarray,
+                 puzzle_size: int, algorithm: int = 0, heuristic: int = 0):
         self.__init_state = init_state
         self.__goal_state = goal_state
         self.__puzzle_size = puzzle_size
@@ -30,34 +26,44 @@ class Solver:
             'greedy_search',
             'uniform-cost_search'][algorithm]
         self.__heuristic_method = [
-            distance.cityblock,
-            distance.euclidean,
-            distance.chebyshev][heuristic]
+            Node.calc_manhattan_distance,
+            Node.calc_euclidean_distance,
+            Node.calc_chebyshev_distance][heuristic]
 
-        self.__open_list = PriorityQueue()
-        self.__closed_list = set()
+        self.__open_list: PriorityQueue[Node] = PriorityQueue()
+        self.__closed_list: set[Node] = set()
 
         self.__search_time = 0
         self.__moves_number = 0
         self.__selected_states = 0
         self.__size_complexity = 0
 
-        # make start_solving private func
-        self.__init_node_cls_variables()
-        self.__solution = self.__solve_puzzle()
-        self.__solution_path = self.__solution.get_solution_path()
+        self.__solve_puzzle()
 
-        self.__moves_number = len(self.__solution_path) - 1
-        self.print_result()
-
-    def __init_node_cls_variables(self):
+    def __solve_puzzle(self) -> None:
+        # shuffle all vars again
         Node.puzzle_size = self.__puzzle_size
         Node.calc_method = self.__heuristic_method  # euclidean_method call
         Node.goal_state = self.__goal_state
         Node.algorithm = self.__search_algo  # maybe rename
         Node.aim_hash = Node.make_state_hash(self.__goal_state)
 
-    def __solve_puzzle(self):
+        Node.goal_coordinates = self.__make_goal_coordinates()
+
+        self.__solution = self.__get_solution()
+        self.__solution_path = self.__solution.get_solution_path()
+        self.__moves_number = len(self.__solution_path) - 1
+        self.print_result()
+
+    # def create_goal_puzzle(self):
+    # replce it here form utils
+    # better call make
+
+    def __make_goal_coordinates(self):
+        return {i: np.where(self.__goal_state == i) for i
+                in range(1, self.__puzzle_size ** 2)}
+
+    def __get_solution(self):
         start_time = timeit.default_timer()
         solution_node = None
         root_node = Node(self.__init_state, father=None)
@@ -70,7 +76,7 @@ class Solver:
         while not self.__open_list.empty():
             lowest_cost_node = self.__open_list.get()
             # print(lowest_cost_node.state) # DEL
-            # print('H COST', lowest_cost_node.h_cost) # DEL
+            # print('H COST', lowest_cost_node.h_cost)  # DEL
             # exit()
             self.__selected_states += 1
             # print('FULLcost lowest', lowest_cost_node.full_cost, '  and size', self.open_list.qsize())
@@ -93,7 +99,7 @@ class Solver:
         return solution_node
 
     def print_solution_path(self):
-        aim = self.__goal_state.tolist()
+        goal_state = self.__goal_state.tolist()
         len_path = self.__moves_number
         for state in self.__solution_path:
             print_matrix = state.copy()
@@ -102,11 +108,11 @@ class Solver:
                 for x in range(self.__puzzle_size):
                     if state[y][x] == 0 and len_path > 0:
                         continue
-                    elif state[y][x] == aim[y][x]:
+                    elif state[y][x] == goal_state[y][x]:
                         state[y][x] = colored(state[y][x], 'green')
                     else:
                         state[y][x] = colored(state[y][x], 'red')
-            print_matrix = re.sub(r'\d+', '{}', print_matrix.__str__()).\
+            print_matrix = re.sub(r'\d+', '{}', print_matrix.__str__()). \
                 replace('[[', ' [').replace('[', '').replace(']', '')
             print(print_matrix.format(*tuple(sum(state, []))))
             print()
@@ -124,20 +130,3 @@ class Solver:
         print('number of selected states:', green(self.__selected_states))
         print('number of states in memory:', green(self.__size_complexity))
 
-
-# rename all variables here
-# make argvars for options algo and heru
-if __name__ == '__main__':
-    algo = 0
-    hero = 0
-    # sys.argv[1] = path
-    path = 'tests/my_case.txt'
-    puzzle, size = utils.parse_file(path)  # add size in dict + algo + heru
-    goal = utils.create_goal_puzzle(size)  # puz size
-    if utils.is_solvable(puzzle, goal, size) is False:
-        print('wrong puz not ok')  # ex it in red
-        exit()
-    print()
-    # dtype = float
-    # print(goal)
-    solver = Solver(puzzle, goal, size, algo, hero)

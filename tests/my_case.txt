@@ -1,5 +1,5 @@
 # PONIES
 3
-3 1 0 #another comment
-6 8 7
-2 5 4
+3 0 5 #another comment
+1 4 8
+7 2 6

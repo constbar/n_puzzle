@@ -1,7 +1,7 @@
 to do
 
 * author file
-
+# ecли мы выбираем наш вариан постоения матрицы, то надо ее показать -> print it
 * uniform cost
 * greedy search
 * make by own heruistic
