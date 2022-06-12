@@ -1,6 +1,7 @@
 to do
 
 * author file
+* 
 # ecли мы выбираем наш вариан постоения матрицы, то надо ее показать -> print it
 * make it singltone
 * add getters adn setters
