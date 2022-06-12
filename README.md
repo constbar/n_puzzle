@@ -2,9 +2,6 @@ to do
 
 * author file
 # ecли мы выбираем наш вариан постоения матрицы, то надо ее показать -> print it
-* uniform cost
-* greedy search
-* make by own heruistic
 * make it singltone
 * add getters adn setters
 * color all ouputs
@@ -13,7 +10,6 @@ to do
 * make private variables + private funcs
 * del dummys in generator
 
-* send puzzle size to solver
 * check given params from subj
 
 если  он определяет решаемость, нужер ли делать проверку?
