@@ -1,9 +1,11 @@
-from solver import Solver
 import utils
+from solver import Solver
 
 # rename all variables here
 # make argvars for options algo and heru
 if __name__ == '__main__':
+    # vis = True
+    vis = False
     # if vis -> vis
     # esle print
     algo = 0
@@ -19,3 +21,4 @@ if __name__ == '__main__':
     # dtype = float
     # print(goal)
     solver = Solver(puzzle, goal, size, algo, hero)
+    solver.show_result(visualize=vis)  # true or false

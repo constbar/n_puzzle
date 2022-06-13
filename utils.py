@@ -2,14 +2,14 @@ import collections
 
 import sys
 import numpy as np
+import random
 
 def create_random_puzzle(puzzle_size):
-    rand = list(range(size**2))
+    rand = list(range(puzzle_size ** 2))
     random.shuffle(rand)
-    rand = np.array(rand).reshape(size, size)
+    rand = np.array(rand).reshape(puzzle_size, puzzle_size)
     return rand
-# kek = create_random_puzzle(size)
-# print(kek)
+
 
 def create_goal_puzzle(puzzle_size): # state reanme
     """	for snake/ulitka location"""
@@ -18,7 +18,6 @@ def create_goal_puzzle(puzzle_size): # state reanme
 
     y, x = 0, 0
     circle = 1
-
     while deq:
         try:
             if res[y][x] == 0:
@@ -34,10 +33,6 @@ def create_goal_puzzle(puzzle_size): # state reanme
     while res[0][0] != 1:
         res = np.rot90(res)
     return res
-
-
-
-
 
 def parse_file(path): # or other name
     # params for choosing algo and count dist

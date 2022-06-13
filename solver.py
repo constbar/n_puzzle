@@ -4,6 +4,7 @@ from queue import PriorityQueue
 from typing import Optional, Dict, Any
 
 import numpy as np
+import pygame
 from termcolor import colored
 
 from node import Node
@@ -12,10 +13,10 @@ from node import Node
 class Solver:
     __slots__ = (
         '__init_state', '__goal_state', '__puzzle_size',
-        '__search_algo', '__heuristic_method', '__open_list',
-        '__closed_list', '__search_time', '__moves_number',
-        '__selected_states', '__size_complexity', '__solution',
-        '__solution_path')
+        '__search_algo', '__heuristic_method', '__draw_solution',
+        '__open_list', '__closed_list', '__search_time',
+        '__moves_number', '__selected_states', '__size_complexity',
+        '__solution', '__solution_path')
 
     def __init__(self, init_state: np.ndarray, goal_state: np.ndarray,
                  puzzle_size: int, algorithm: int = 0, heuristic: int = 0):
@@ -53,7 +54,6 @@ class Solver:
         if isinstance(self.__solution, Node):
             self.__solution_path = self.__solution.get_solution_path()
             self.__moves_number = len(self.__solution_path) - 1
-            self.print_result()
 
     def __make_goal_coordinates(self) -> Dict[int, Any]:
         return {i: np.where(self.__goal_state == i) for i
@@ -66,7 +66,7 @@ class Solver:
         if root_node.is_goal_state() is True:
             solution_node = root_node
             self.__search_time = timeit.default_timer() - start_time
-            return solution_node  # print puzzle solution is already given
+            return solution_node
 
         self.__open_list.put(root_node)
         while not self.__open_list.empty():
@@ -112,13 +112,73 @@ class Solver:
                 print()
                 len_path -= 1
 
-    def print_result(self) -> None:
+    def show_result(self, *, visualize: bool) -> None:
+        if visualize is True:
+            self.__draw_result()
+        else:
+            self.__print_result()
+
+    def __draw_result(self) -> None:
+        black = (0, 0, 0)
+        red = (247, 91, 72)
+        green = (121, 247, 142)
+        empty_tile = (219, 208, 200)
+        pygame.init()
+        window_size = 600
+        square_size = int(window_size / self.__puzzle_size)
+        window_size = square_size * self.__puzzle_size
+        screen = pygame.display.set_mode((window_size, window_size))
+        caption = f"{self.__puzzle_size ** 2 - 1} puzzle solution with " \
+                  f"the {self.__search_algo.replace('_', ' ')} algorithm"
+        pygame.display.set_caption(caption)
+        digit_height = int(window_size / self.__puzzle_size * 0.6)
+        font = pygame.font.Font('freesansbold.ttf', digit_height)
+
+        i = 0
+        run = True
+        clock = pygame.time.Clock()
+        while i < len(self.__solution_path) and run:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        run = False
+
+            screen.fill(black)
+            for y in range(self.__puzzle_size):
+                for x in range(self.__puzzle_size):
+                    square = (y * square_size, x * square_size,
+                              square_size - 1, square_size - 1)
+                    if self.__solution_path[i][x][y] == 0:
+                        pygame.draw.rect(screen, empty_tile, square)
+                    elif self.__solution_path[i][x][y] == self.__goal_state[x][y]:
+                        pygame.draw.rect(screen, green, square)
+                    else:
+                        pygame.draw.rect(screen, red, square)
+
+                    if self.__solution_path[i][x][y] == 0:
+                        text_surface_obj = font.render('', True, black)
+                    else:
+                        text_surface_obj = font.render(str(
+                            self.__solution_path[i][x][y]), True, black)
+                    text_rect_obj = text_surface_obj.get_rect()
+                    text_rect_obj.center = (y * square_size + square_size / 2,
+                                            x * square_size + square_size / 2)
+                    screen.blit(text_surface_obj, text_rect_obj)
+            pygame.display.update()
+            pygame.time.wait(1000)
+            clock.tick(20)
+            i += 1
+        pygame.quit()
+
+    def __print_result(self) -> None:
         green = lambda i: colored(str(i), 'green')
-        # remake names of heuristic and algorithm
         self.print_solution_path()
         # make variants here
-        print('applied algorithm:', green(self.__search_algo))  # optional
-        print('applied heuristic function:', green('manhattan'))  # optional
+        print('applied algorithm:', green(self.__search_algo.replace('_', ' ')))
+        print('applied heuristic function:', green(' '.join(self.__heuristic_method.
+                                                            __name__.split('_')[1:])))
         print()
         print('number of moves:', green(self.__moves_number))
         print('search time:', green(round(self.__search_time, 3)), 'secs')
