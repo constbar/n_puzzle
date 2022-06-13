@@ -1,10 +1,8 @@
 to do
 
+* mypy
 * all modules press ctl O
 * author file
-# ecли мы выбираем наш вариан постоения матрицы, то надо ее показать -> print it
-* make it singltone
-* del dummys in generator
 * check given params from subj
 * change comment in sys.exits
 * emtpy lines doents parses, need to skip it

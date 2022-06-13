@@ -1,17 +1,14 @@
 import collections
-
-import sys
-import numpy as np
 import random
+import sys
 
-def create_random_puzzle(puzzle_size):
-    rand = list(range(puzzle_size ** 2))
-    random.shuffle(rand)
-    rand = np.array(rand).reshape(puzzle_size, puzzle_size)
-    return rand
+import numpy as np
+from typing import List, Any
+
+# make annotiaons
 
 
-def create_goal_puzzle(puzzle_size): # state reanme
+def create_goal_state(puzzle_size):
     """	for snake/ulitka location"""
     deq = collections.deque(range(1, puzzle_size**2))
     res = np.zeros((puzzle_size, puzzle_size), dtype=int)
@@ -71,7 +68,7 @@ def parse_file(path): # or other name
     return arr, puzzle_size # rename na puzzle i think
 
 
-def gen_inversion_number(array):
+def gen_inversion_number(array): # it can be inside other func
     inversions = 0
     for i in range(len(array)):
         n = array[i]
@@ -94,3 +91,35 @@ def is_solvable(init_state, goal_state, width):
         return goal_inv % 2 == (init_inv + goal_zero_ind + start_zero_ind) % 2
     else:
         return init_inv % 2 == goal_inv % 2
+
+
+def make_puzzle(size):
+    def shuffle_matrix(puzzle):
+        idx = puzzle.index(0)
+        poss = []
+        if idx % size > 0:
+            poss.append(idx - 1)
+        if idx % size < size - 1:
+            poss.append(idx + 1)
+        if idx / size > 0 and idx - size >= 0:
+            poss.append(idx - size)
+        if idx / size < size - 1:
+            poss.append(idx + size)
+        swi = random.choice(poss)
+        puzzle[idx] = puzzle[swi]
+        puzzle[swi] = 0
+
+    solvable = random.choice([True, False])
+    print('IS SILVABLE????? ', solvable) # del at the end
+    gen_puzzle = create_goal_state(size).tolist()
+    if isinstance(gen_puzzle, list):
+        gen_puzzle = sum(gen_puzzle, [])
+    for _ in range(10):                                     # 10000 !!!!!!!!!!!!!!!!!!!!!!!!
+        shuffle_matrix(gen_puzzle)
+
+    if not solvable:
+        if gen_puzzle[0] == 0 or gen_puzzle[1] == 0:
+            gen_puzzle[-1], gen_puzzle[-2] = gen_puzzle[-2], gen_puzzle[-1]
+        else:
+            gen_puzzle[0], gen_puzzle[1] = gen_puzzle[1], gen_puzzle[0]
+    return gen_puzzle

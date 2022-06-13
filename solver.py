@@ -90,7 +90,7 @@ class Solver:
         self.__search_time = timeit.default_timer() - start_time
         return solution_node
 
-    def print_solution_path(self) -> None:
+    def __print_solution_path(self) -> None:
         goal_state = self.__goal_state.tolist()
         len_path = self.__moves_number
         for state in self.__solution_path:
@@ -112,8 +112,8 @@ class Solver:
                 print()
                 len_path -= 1
 
-    def show_result(self, *, visualize: bool) -> None:
-        if visualize is True:
+    def show_result(self, *, visualization: bool) -> None:
+        if visualization is True:
             self.__draw_result()
         else:
             self.__print_result()
@@ -123,15 +123,16 @@ class Solver:
         red = (247, 91, 72)
         green = (121, 247, 142)
         empty_tile = (219, 208, 200)
-        pygame.init()
         window_size = 600
         square_size = int(window_size / self.__puzzle_size)
         window_size = square_size * self.__puzzle_size
-        screen = pygame.display.set_mode((window_size, window_size))
+        digit_height = int(window_size / self.__puzzle_size * 0.6)
         caption = f"{self.__puzzle_size ** 2 - 1} puzzle solution with " \
                   f"the {self.__search_algo.replace('_', ' ')} algorithm"
+
+        pygame.init()
+        screen = pygame.display.set_mode((window_size, window_size))
         pygame.display.set_caption(caption)
-        digit_height = int(window_size / self.__puzzle_size * 0.6)
         font = pygame.font.Font('freesansbold.ttf', digit_height)
 
         i = 0
@@ -174,7 +175,7 @@ class Solver:
 
     def __print_result(self) -> None:
         green = lambda i: colored(str(i), 'green')
-        self.print_solution_path()
+        self.__print_solution_path()
         # make variants here
         print('applied algorithm:', green(self.__search_algo.replace('_', ' ')))
         print('applied heuristic function:', green(' '.join(self.__heuristic_method.
