@@ -93,8 +93,8 @@ def is_solvable(init_state, goal_state, width):
         return init_inv % 2 == goal_inv % 2
 
 
-def make_puzzle(size):
-    def shuffle_matrix(puzzle):
+def make_puzzle(size: int, shuffle_num: int) -> np.ndarray:
+    def shuffle_matrix(puzzle): # here add anotations
         idx = puzzle.index(0)
         poss = []
         if idx % size > 0:
@@ -114,7 +114,7 @@ def make_puzzle(size):
     gen_puzzle = create_goal_state(size).tolist()
     if isinstance(gen_puzzle, list):
         gen_puzzle = sum(gen_puzzle, [])
-    for _ in range(10):                                     # 10000 !!!!!!!!!!!!!!!!!!!!!!!!
+    for _ in range(shuffle_num):
         shuffle_matrix(gen_puzzle)
 
     if not solvable:

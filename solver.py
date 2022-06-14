@@ -1,4 +1,5 @@
 import re
+import time
 import timeit
 from queue import PriorityQueue
 from typing import Optional, Dict, Any
@@ -109,6 +110,7 @@ class Solver:
                 print_matrix = re.sub(r'\d+', '{}', print_matrix.__str__()). \
                     replace('[[', ' [').replace('[', '').replace(']', '')
                 print(print_matrix.format(*tuple(sum(state, []))))
+                time.sleep(.5)
                 print()
                 len_path -= 1
 
