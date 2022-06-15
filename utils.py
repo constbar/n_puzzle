@@ -14,25 +14,25 @@ def print_error_exit(text: str) -> None:
 
 def create_goal_state(puzzle_size: int) -> np.ndarray:
     deq = collections.deque(range(1, puzzle_size**2))
-    result = np.zeros((puzzle_size, puzzle_size), dtype=int)
+    res = np.zeros((puzzle_size, puzzle_size), dtype=int)
 
     y, x = 0, 0
     circle = 1
     while deq:
         try:
-            if result[y][x] == 0:
-                result[y][x] = deq.popleft()
+            if res[y][x] == 0:
+                res[y][x] = deq.popleft()
         except IndexError:
             if circle % 4 == 0:
                 y += 1
-            result = np.rot90(result)
+            res = np.rot90(res)
             circle += 1
             x = 0
         x += 1
 
-    while result[0][0] != 1:
-        result = np.rot90(result)
-    return result
+    while res[0][0] != 1:
+        res = np.rot90(res)
+    return res
 
 
 def parse_file(path: str) -> tuple[np.ndarray, int]:
