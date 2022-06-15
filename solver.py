@@ -1,3 +1,4 @@
+import os
 import re
 import time
 import timeit
@@ -5,11 +6,12 @@ from queue import PriorityQueue
 from typing import Optional, Dict, Any
 
 import numpy as np
-import pygame
 from termcolor import colored
 
 from node import Node
 
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide'
+import pygame
 
 class Solver:
     __slots__ = (
@@ -177,8 +179,8 @@ class Solver:
 
     def __print_result(self) -> None:
         green = lambda i: colored(str(i), 'green')
+        print()
         self.__print_solution_path()
-        # make variants here
         print('applied algorithm:', green(self.__search_algo.replace('_', ' ')))
         print('applied heuristic function:', green(' '.join(self.__heuristic_method.
                                                             __name__.split('_')[1:])))

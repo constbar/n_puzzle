@@ -7,6 +7,7 @@ to do
 * change comment in sys.exits
 * emtpy lines doents parses, need to skip it
 * test test test with all variants
+* check all comments #
 
 если  он определяет решаемость, нужер ли делать проверку?
 find funс will random all range on matrix, whitch in subj - bad
