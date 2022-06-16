@@ -23,7 +23,7 @@ if __name__ == '__main__':
                         type=str, default='manhattan',
                         choices=['manhattan', 'euclidean', 'chebyshev'],
                         help='choice of heuristic function to use')
-    parser.add_argument('-shuffle', default=100, required=False,
+    parser.add_argument('-shuffle', required=False,
                         type=int, help='number of puzzle shuffles')
     parser.add_argument('-vis', '--visualization', required=False,
                         type=bool, default=False,
@@ -33,19 +33,18 @@ if __name__ == '__main__':
     if args.file and args.size:
         utils.print_error_exit('need to choose between submitting a puzzle '
                                'through a file and generating a puzzle')
+    elif args.file and args.shuffle:
+        utils.print_error_exit('only the generated puzzle can be shuffled')
     elif not args.file and not args.size:
         utils.print_error_exit('need to submit a puzzle through a file or '
                                'generate using parameters')
     elif args.size and args.size < 2:
-    # elif isinstance(args.size, int) and args.size < 2:
         utils.print_error_exit('puzzle must be more than 1 tile')
-    elif args.shuffle < 0:
-    # elif args.size and args.shuffle < 0:
+    elif args.shuffle and args.shuffle < 0:
         utils.print_error_exit('number of shuffles must not be a negative number')
-    elif args.shuffle > 1000:
+    elif args.shuffle and args.shuffle > 1000:
         print(colored('not recommended to shuffle the puzzle too much '
                       'times due to cpu usage', 'yellow'))
-    # if args shuffle and file -> just inform that
 
     algo_choice = ['a-star', 'greedy', 'uniform-cost'].index(args.algorithm)
     heur_choice = ['manhattan', 'euclidean', 'chebyshev'].index(args.heuristic)
@@ -53,7 +52,7 @@ if __name__ == '__main__':
     if args.file:
         received_puzzle, args.size = utils.parse_file(args.file)
     else:
-        # args.shuffle = 100 if not args.shuffle else args.shuffle
+        args.shuffle = 100 if not args.shuffle else args.shuffle
         received_puzzle = np.array(utils.make_puzzle(
             args.size, args.shuffle)).reshape(args.size, args.size)
 
@@ -68,7 +67,7 @@ if __name__ == '__main__':
     print('final state puzzle solution')
     print(print_state(goal_state, 'green'))
     print()
-
+    exit()
     if utils.is_solvable(received_puzzle, goal_state, args.size) is False:
         utils.print_error_exit('received puzzle cannot be solved. try to make a new one')
     else:

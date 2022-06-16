@@ -1,7 +1,6 @@
 to do
 
 * mypy
-* all modules press ctl O
 * author file
 * check given params from subj
 * change comment in sys.exits

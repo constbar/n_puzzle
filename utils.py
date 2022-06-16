@@ -1,7 +1,7 @@
 import collections
 import random
 import sys
-from typing import List
+from typing import Any, List
 
 import numpy as np
 from termcolor import colored
@@ -38,7 +38,7 @@ def create_goal_state(puzzle_size: int) -> np.ndarray:
 def parse_file(path: str) -> tuple[np.ndarray, int]:
     try:
         with open(path, 'r') as file:
-            data = file.read().split('\n')
+            data: Any = file.read().split('\n')
             data = [i for i in data if i]
     except FileNotFoundError:
         print_error_exit('need a valid file')
@@ -60,7 +60,7 @@ def parse_file(path: str) -> tuple[np.ndarray, int]:
     
     data = sum([i.split() for i in data], [])
     try:
-        data = list(map(int, data))  # make new variable clear_data
+        data = list(map(int, data))
     except ValueError:
         print_error_exit('the data in the puzzle must be positive numbers')
     if set(data) != set(range(puzzle_size ** 2)):
