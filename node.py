@@ -5,7 +5,6 @@ from typing import Dict, Any, Callable, Tuple, List
 import numpy as np
 
 
-
 class Node:
     __slots__ = ('__state', '__father', '__level')
     goal_state: np.ndarray | None = None
