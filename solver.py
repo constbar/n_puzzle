@@ -13,6 +13,7 @@ from node import Node
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide'
 import pygame
 
+
 class Solver:
     __slots__ = (
         '__init_state', '__goal_state', '__puzzle_size',
@@ -168,8 +169,8 @@ class Solver:
                         text_surface_obj = font.render(str(
                             self.__solution_path[i][x][y]), True, black)
                     text_rect_obj = text_surface_obj.get_rect()
-                    text_rect_obj.center = (y * int(square_size + square_size / 2),
-                                            x * int(square_size + square_size / 2))
+                    text_rect_obj.center = (int(y * square_size + square_size / 2),
+                                            int(x * square_size + square_size / 2))
                     screen.blit(text_surface_obj, text_rect_obj)
             pygame.display.update()
             pygame.time.wait(1000)

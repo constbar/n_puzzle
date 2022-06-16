@@ -67,7 +67,7 @@ if __name__ == '__main__':
     print('final state puzzle solution')
     print(print_state(goal_state, 'green'))
     print()
-    exit()
+
     if utils.is_solvable(received_puzzle, goal_state, args.size) is False:
         utils.print_error_exit('received puzzle cannot be solved. try to make a new one')
     else:
