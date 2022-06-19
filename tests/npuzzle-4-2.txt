@@ -1,4 +1,4 @@
-# puzzles can be aligned, or not. whatever.
+# puzzles can be aligned, or not. whatever
 4
 0 10 5 7
 11 14 4 8
