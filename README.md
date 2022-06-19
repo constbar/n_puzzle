@@ -4,11 +4,11 @@ the École 42 project where it is necessary to create a program capable
 of solving n-puzzles of different sizes in order to achieve a state 
 known as 'snail solution'.
 
-the program can accept files or generate puzzles on its own.
-
 the program works with 3 algorithms to choose from (a* search, greedy 
 search, uniform cost search) and 3 heuristic functions to choose from 
 (manhattan, euclidean, chebyshev).
+
+the program can accept files or generate puzzles on its own.
 
 ![](puzzle.gif)
 
