@@ -25,9 +25,8 @@ if __name__ == '__main__':
                         help='choice of heuristic function to use')
     parser.add_argument('-shuffle', required=False,
                         type=int, help='number of puzzle shuffles')
-    parser.add_argument('-vis', '--visualization', required=False,
-                        type=bool, default=False,
-                        help='puzzle solution visualization')
+    parser.add_argument('-vis', '--visualization', action='store_true',
+                        required=False, help='puzzle solution visualization')
     args = parser.parse_args()
 
     if args.file and args.size:
